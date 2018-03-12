@@ -1,0 +1,109 @@
+#data = scan("5_4.asc")
+
+tm1 = seq(1,length(data), by=2594)
+tm2 = seq(2,length(data), by=2594)
+
+months = data[tm1]
+years = data[tm2]
+
+date = paste(years, sep = "-", months)
+
+tm3 = as.vector(t(cbind(tm1, tm2)))
+data2 = data[-tm3]
+
+da3 = matrix(data2, ncol=length(data2)/(36*72))
+colnames(da3) = date
+lat1 = seq(-87.5, 87.5, length = 36)
+lon1 = seq(2.5, 357.5, length = 72)
+lat = rep(lat1, each=72)
+lon = rep(lon1, 36)
+
+cleaned_data = cbind(lat,lon, da3)
+
+
+pac_indx = which(cleaned_data[,1]>-20 & cleaned_data[,1]<20 & cleaned_data[,2]>160 & cleaned_data[,2]<260)
+dat_pac = cleaned_data[pac_indx, 861:1460] #july 1951- june 2001
+
+pacificMeans = matrix(0, nrow = 160, ncol = 50)
+tmp = seq(1,600, by=12)
+for (i in 1:160) {
+  for (j in 1:50) {
+    pacificMeans[i,j] = mean(dat_pac[,tmp[j]:tmp[j]+11])
+  }
+}
+
+#a
+pMeansvd=svd(pacificMeans)
+U = pMeansvd$u
+D = pMeansvd$d
+V = pMeansvd$v
+
+D[1:10]
+
+#b
+library(maps)
+Lat=seq(-17.5,17.5, by=5)
+Lon=seq(162.5, 257.5, by=5)
+plot.new()
+par(mar=c(4,5,3,0))
+mapmat=matrix(U[,1], nrow=20)
+int=seq(-5,5,length.out=81)
+rgb.palette=colorRampPalette(c('black','blue', 'darkgreen',
+                               'green', 'yellow','pink','red','maroon'),interpolate='spline')
+
+filled.contour(Lon, Lat, mapmat, color.palette=rgb.palette, levels=int,
+               xlim=c(120,300),ylim=c(-40,40),
+               plot.title=title(main="Pacific SST Anomalies [deg C]: Annual 1951",
+                                xlab="Latitude",ylab="Longitude", cex.lab=1.5),
+               plot.axes={axis(1, cex.axis=1.5); axis(2, cex.axis=1.5);
+                 map('world2', add=TRUE);grid()},
+               key.title=title(main="[oC]"),
+               key.axes={axis(4, cex.axis=1.5)})
+
+plot.new()
+par(mar=c(4,5,3,0))
+mapmat=matrix(U[,2], nrow=20)
+filled.contour(Lon, Lat, mapmat, color.palette=rgb.palette, levels=int,
+               xlim=c(120,300),ylim=c(-40,40),
+               plot.title=title(main="Pacific SST Anomalies [deg C]: Annual 1952",
+                                xlab="Latitude",ylab="Longitude", cex.lab=1.5),
+               plot.axes={axis(1, cex.axis=1.5); axis(2, cex.axis=1.5);
+                 map('world2', add=TRUE);grid()},
+               key.title=title(main="[oC]"),
+               key.axes={axis(4, cex.axis=1.5)})
+
+plot.new()
+par(mar=c(4,5,3,0))
+mapmat=matrix(U[,3], nrow=20)
+filled.contour(Lon, Lat, mapmat, color.palette=rgb.palette, levels=int,
+               xlim=c(120,300),ylim=c(-40,40),
+               plot.title=title(main="Pacific SST Anomalies [deg C]: Annual 1953",
+                                xlab="Latitude",ylab="Longitude", cex.lab=1.5),
+               plot.axes={axis(1, cex.axis=1.5); axis(2, cex.axis=1.5);
+                 map('world2', add=TRUE);grid()},
+               key.title=title(main="[oC]"),
+               key.axes={axis(4, cex.axis=1.5)})
+
+#c
+par(mfrow=c(1,1))
+par(mar=c(3,4,2,1))
+plot(1:50, V[,1],type="o",col="red",lwd=2,
+     main="Temporal pattern: Time series",xlab="Time",
+     ylab="PC1 values: dimensionless",
+     cex.lab=1.3, cex.axis=1.3)
+
+par(mfrow=c(1,1))
+par(mar=c(3,4,2,1))
+plot(1:50, V[,2],type="o",col="red",lwd=2,
+     main="Temporal pattern: Time series",xlab="Time",
+     ylab="PC1 values: dimensionless",
+     cex.lab=1.3, cex.axis=1.3)
+
+par(mfrow=c(1,1))
+par(mar=c(3,4,2,1))
+plot(1:50, V[,3],type="o",col="red",lwd=2,
+     main="Temporal pattern: Time series",xlab="Time",
+     ylab="PC1 values: dimensionless",
+     cex.lab=1.3, cex.axis=1.3)
+
+
