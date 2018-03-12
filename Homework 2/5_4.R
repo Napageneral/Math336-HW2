@@ -20,17 +20,27 @@ lon = rep(lon1, 36)
 
 cleaned_data = cbind(lat,lon, da3)
 
-
 pac_indx = which(cleaned_data[,1]>-20 & cleaned_data[,1]<20 & cleaned_data[,2]>160 & cleaned_data[,2]<260)
 dat_pac = cleaned_data[pac_indx, 861:1460] #july 1951- june 2001
 
+#zero out missing data
+for (i in 1:160) {
+  for (j in 1:600) {
+    if(dat_pac[i,j]< -300){
+      dat_pac[i,j] = 0
+    }
+  }
+}
+
+#Compress monthly data into the yearly mean
 pacificMeans = matrix(0, nrow = 160, ncol = 50)
 tmp = seq(1,600, by=12)
 for (i in 1:160) {
   for (j in 1:50) {
-    pacificMeans[i,j] = mean(dat_pac[,tmp[j]:tmp[j]+11])
+    pacificMeans[i,j] = mean(dat_pac[i,tmp[j]:tmp[j]+11])
   }
 }
+
 
 #a
 pMeansvd=svd(pacificMeans)
@@ -60,7 +70,6 @@ filled.contour(Lon, Lat, mapmat, color.palette=rgb.palette, levels=int,
                key.title=title(main="[oC]"),
                key.axes={axis(4, cex.axis=1.5)})
 
-plot.new()
 par(mar=c(4,5,3,0))
 mapmat=matrix(U[,2], nrow=20)
 filled.contour(Lon, Lat, mapmat, color.palette=rgb.palette, levels=int,
@@ -72,7 +81,6 @@ filled.contour(Lon, Lat, mapmat, color.palette=rgb.palette, levels=int,
                key.title=title(main="[oC]"),
                key.axes={axis(4, cex.axis=1.5)})
 
-plot.new()
 par(mar=c(4,5,3,0))
 mapmat=matrix(U[,3], nrow=20)
 filled.contour(Lon, Lat, mapmat, color.palette=rgb.palette, levels=int,
