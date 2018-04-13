@@ -15,7 +15,7 @@ while (principal > 0) {
   }
   month_count=month_count+1
 }
-principal
+
 month_count
 month_count/12
 

@@ -17,5 +17,5 @@ while (principal > 0) {
 }
 principal
 month_count
-month_count/12
-24*12
+years = round(month_count/12)
+years
