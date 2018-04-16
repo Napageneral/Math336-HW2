@@ -1,6 +1,10 @@
+#Same thing as last problem, except you hardly have to clean any data
 
 data = read.csv("C:/Users/Tyler Brandt/Desktop/Math-336/Homework 2/5_5.csv")
 
+#All your cleaning is done here
+#Pick coordinates
+#Pick dates
 pac_indx = which(data[,1]>-20 & data[,1]<20 & data[,2]>160 & data[,2]<260)
 cleaned_data = data[pac_indx, 54:103] #1951-2000
 
