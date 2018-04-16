@@ -1,5 +1,5 @@
+data = read.csv("C:/Users/Tyler Brandt/Desktop/Math-336/Homework2/5_5.csv")
 
-data = read.csv("C:/Users/Tyler Brandt/Desktop/Math-336/Homework 2/5_5.csv")
 
 pac_indx = which(data[,1]>-20 & data[,1]<20 & data[,2]>160 & data[,2]<260)
 cleaned_data = data[pac_indx, 54:103] #1951-2000

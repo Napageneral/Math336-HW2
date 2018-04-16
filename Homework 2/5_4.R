@@ -1,3 +1,4 @@
+library(maps)
 data = scan("5_4.asc")
 
 tm1 = seq(1,length(data), by=2594)
